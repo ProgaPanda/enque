@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <appBar app />
+    <appBar />
     <queueComponent />
   </v-container>
 </template>
