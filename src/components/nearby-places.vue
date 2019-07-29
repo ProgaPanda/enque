@@ -1,17 +1,20 @@
   <template>
   <div>
     <v-list>
-      <v-list-item v-for="location in nearby" :key="location.name">
-        <v-card flat width="100vw" class="mx-auto my-auto">
-          <v-card-title>{{location.name}}</v-card-title>
-          <v-card-text>
-            <p>
-              <v-icon small left>location_on</v-icon>2 minutes away.
-              <v-icon right>open_in_new</v-icon>
-            </p>
-          </v-card-text>
-        </v-card>
-      </v-list-item>
+      <v-container fluid>
+        <v-list-item v-for="location in nearby" :key="location.name">
+          <v-card flat width="100vw" class="mx-auto my-auto">
+            <h3>{{location.name}}</h3>
+            <v-card-actions style="padding-left:0">
+              <v-layout>
+                <v-icon small left>location_on</v-icon>2 minutes away.
+                <v-spacer></v-spacer>
+                <v-icon right>open_in_new</v-icon>
+              </v-layout>
+            </v-card-actions>
+          </v-card>
+        </v-list-item>
+      </v-container>
     </v-list>
   </div>
 </template>
