@@ -109,6 +109,18 @@ export default {
       ]);
       this.nearby = [...new Set(places.flat())];
       this.isLoading = false;
+
+      const distinctBy = (arr, extractorFn) => {
+          const result = [];
+          for (let i = 0; i < arr.length; i++) {
+              const found = result.find(item => extractorFn(item)=== extractorFn(arr[i]));
+              if (!found)
+                  result.push(arr[i])
+          }
+          return result;
+        };
+
+      this.nearby = distinctBy(places.flat(), i => i.name);
     },
     getLocation() {
       let options = {
@@ -121,14 +133,7 @@ export default {
         console.warn(`ERROR(${err.code}): ${err.message}`);
       }
       return new Promise((res, rej) => {
-        navigator.geolocation.getCurrentPosition(
-          pos => {
-            var crd = pos.coords;
-            res(crd);
-          },
-          error,
-          options
-        );
+        navigator.geolocation.getCurrentPosition(pos => res(pos.coords), error, options);
       });
     }
   },
