@@ -1,8 +1,7 @@
   <template>
   <div>
-    <v-btn text @click="findNearby">Click</v-btn>
-    <v-list v-for="location in nearby" :key="location.name">
-      <v-list-item>
+    <v-list>
+      <v-list-item v-for="location in nearby" :key="location.name">
         <v-card flat width="100vw" class="mx-auto my-auto">
           <v-card-title>
             <v-icon left>location_on</v-icon>
