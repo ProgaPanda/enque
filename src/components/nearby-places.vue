@@ -2,16 +2,18 @@
   <div>
     <v-list>
       <v-container fluid>
-        <v-list-item v-for="location in nearby" :key="location.name">
+        <v-list-item @click="onLinkClick" v-for="location in nearby" :key="location.name">
           <v-card flat width="100vw" class="mx-auto my-auto">
             <h3>{{location.name}}</h3>
             <v-card-actions style="padding-left:0">
               <v-layout>
-                <v-icon small left>location_on</v-icon>2 minutes away.
+                <v-icon small left color="#aeaeae">location_on</v-icon>
+                <div style="color:#757575;padding:0 auto;">2 minutes away.</div>
                 <v-spacer></v-spacer>
-                <v-icon right>open_in_new</v-icon>
+                <v-icon right color="blue">open_in_new</v-icon>
               </v-layout>
             </v-card-actions>
+            <br />
           </v-card>
         </v-list-item>
       </v-container>
@@ -25,6 +27,7 @@ export default {
     this.findNearby();
   },
   methods: {
+    onLinkClick() {},
     async findNearby() {
       const crds = await this.getLocation();
       const cafes = fetch(
