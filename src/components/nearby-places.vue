@@ -14,17 +14,27 @@
 </template>
 
 <script>
+import { Promise } from "q";
 export default {
+  mounted() {
+    this.findNearby();
+  },
   methods: {
-    findNearby: async function() {
+    async findNearby() {
       const crds = await this.getLocation();
-      const res = await fetch(
+      const cafes = fetch(
         `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${crds.latitude},${crds.longitude}&type=cafe&rankby=distance&key=AIzaSyDJR5zil2pek3mXn-QR5AQpPxPPVG9XBmQ`
       );
-      const json = await res.json();
-      this.nearby = json.results;
+      const restaurants = fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${crds.latitude},${crds.longitude}&type=restaurant&rankby=distance&key=AIzaSyDJR5zil2pek3mXn-QR5AQpPxPPVG9XBmQ`
+      );
+      const places = await Promise.all([cafes, restaurants]);
+      const jsons = await Promise.all(places.map(res => res.json()));
+      this.nearby = jsons.reduce((acc, curr) => {
+        return acc.concat(curr.results);
+      }, []);
     },
-    getLocation: function() {
+    getLocation() {
       let options = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -48,12 +58,7 @@ export default {
   },
   data() {
     return {
-      nearby: [
-        {
-          title: "",
-          time: ""
-        }
-      ]
+      nearby: []
     };
   }
 };
