@@ -15,9 +15,5 @@
 
       <v-toolbar-items></v-toolbar-items>
     </v-app-bar>
-
-    <v-navigation-drawer app>
-      <v-list class="pa-1" dark></v-list>
-    </v-navigation-drawer>
   </v-container>
 </template>
