@@ -1,10 +1,12 @@
 <template>
-  <qrcode-stream @decode="onDecode" @init="onInit"/>
+  <div class="qr-container">
+    <qrcode-stream @decode="onDecode" @init="onInit"/>
+  </div>
 </template>
 
 <script>
     import {QrcodeStream} from 'vue-qrcode-reader'
-
+    import router from "@/router"
     export default {
 
         components: {QrcodeStream},
@@ -18,8 +20,8 @@
 
         methods: {
             onDecode(result) {
-                this.result = result
-                console.log(result);
+                console.log(window.location.href, result);
+                router.push("/")
             },
 
             async onInit(promise) {
@@ -46,9 +48,24 @@
     }
 </script>
 
-<style scoped>
-  .camera {
-    height: 100vh;
-    width: 100vw;
+<style lang="scss">
+  .qr-container {
+    background: #333;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .wrapper {
+      .inside {
+        video {
+          margin: auto auto;
+          height: 100%;
+          max-width: 100vw;
+        }
+        height: 100vh;
+      }
+    }
   }
 </style>
