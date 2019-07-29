@@ -4,7 +4,7 @@
       <v-container fluid style="height: 60vh; overflow-y: scroll">
         <v-list-item v-for="place in nearby" :key="place.name">
           <a
-            :href="`google.navigation:q=${place.geometry.location.lat},${place.geometry.location.lng}`"
+            :href="`google.navigation:q=${place.geometry.location.lat()},${place.geometry.location.lng()}`"
             style="text-decoration:none;"
           >
             <v-card style="background-color:#f3f3f3;" flat width="90vw" class="mx-auto my-auto">
