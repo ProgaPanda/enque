@@ -2,9 +2,14 @@
   <div>
     <v-list>
       <v-container fluid>
-        <v-list-item @click="onLinkClick" v-for="location in nearby" :key="location.name">
-          <v-card flat width="100vw" class="mx-auto my-auto">
-            <h3>{{location.name}}</h3>
+        <v-list-item v-for="place in nearby" :key="place.name">
+          <v-card
+            :to="`google.navigation:q=${place.geometry.location.lat},${place.geometry.location.lng}`"
+            flat
+            width="100vw"
+            class="mx-auto my-auto"
+          >
+            <h3>{{place.name}}</h3>
             <v-card-actions style="padding-left:0">
               <v-layout>
                 <v-icon small left color="#aeaeae">location_on</v-icon>
@@ -20,27 +25,35 @@
     </v-list>
   </div>
 </template>
-
 <script>
 export default {
   mounted() {
     this.findNearby();
   },
   methods: {
-    onLinkClick() {},
     async findNearby() {
       const crds = await this.getLocation();
-      const cafes = fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${crds.latitude},${crds.longitude}&type=cafe&rankby=distance&key=AIzaSyDJR5zil2pek3mXn-QR5AQpPxPPVG9XBmQ`
-      );
-      const restaurants = fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${crds.latitude},${crds.longitude}&type=restaurant&rankby=distance&key=AIzaSyDJR5zil2pek3mXn-QR5AQpPxPPVG9XBmQ`
-      );
-      const places = await Promise.all([cafes, restaurants]);
-      const jsons = await Promise.all(places.map(res => res.json()));
-      this.nearby = jsons.reduce((acc, curr) => {
-        return acc.concat(curr.results.slice(0, 5));
-      }, []);
+      const fetchPlaces = (businessType, distance = "2000") =>
+        new Promise((res, rej) => {
+          const service = new google.maps.places.PlacesService(
+            document.createElement("div")
+          );
+          const location = new google.maps.LatLng(
+            crds.latitude,
+            crds.longitude
+          );
+
+          service.nearbySearch(
+            { location, radius: distance, type: [businessType] },
+            data => res(data)
+          );
+        });
+      const places = await Promise.all([
+        fetchPlaces("cafe"),
+        fetchPlaces("restaurant")
+      ]);
+      this.nearby = [...new Set(places.flat())];
+      console.log(this.nearby);
     },
     getLocation() {
       let options = {
