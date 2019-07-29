@@ -4,7 +4,7 @@
       <p class="font-weight-light text-uppercase serving-text">now serving</p>
     </v-layout>
     <v-layout class="justify-center">
-      <h3 class="font-weight-medium display-3 serving-number">C63</h3>
+      <h3 class="font-weight-medium display-3 serving-number">{{currentServing}}</h3>
     </v-layout>
     <v-layout class="justify-center" my-5>
       <v-flex xs11>
@@ -12,12 +12,12 @@
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>
             <span class="overline my-2">people ahead</span>
-            <span class="headline font-weight-medium green--text">4</span>
+            <span class="headline font-weight-medium green--text">{{order - currentServing}}</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">bookmark</v-icon>
             <span class="overline my-2">Your ticket</span>
-            <span class="headline font-weight-medium">W73</span>
+            <span class="headline font-weight-medium">{{order}}</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>
@@ -31,7 +31,60 @@
 </template>
 
 <script>
-export default {};
+import { db } from "@/main";
+import firebase from "firebase/app";
+
+export default {
+  mounted: function() {
+    let id = this.$route.query.queueId;
+    db.collection("queues")
+      .where("name", "==", this.business_name)
+      .onSnapshot(querySnapshot => {
+        this.currentServing = querySnapshot.docs[0].data().currentServing;
+        this.queue = querySnapshot.docs[0].data().queue;
+        this.queue.forEach(entry => {
+          if (entry.id === id) {
+            this.order = entry.order;
+          }
+        });
+      });
+
+    db.collection("queues")
+      .where("name", "==", this.business_name)
+      .get()
+      .then(querySnapshot => {
+        let data = querySnapshot.docs[0].data();
+        let queue = data.queue;
+        let exists = false;
+        queue.forEach(entry => {
+          if (entry.id === id) {
+            exists = true;
+          }
+        });
+
+        if (!exists) {
+          const new_queue_entry = {
+            id,
+            order: this.queue.length
+          };
+          this.queue.push(new_queue_entry);
+          db.collection("queues")
+            // TODO: dynamic id
+            .doc("zfG8pmQNxRROJbIeeSJJ")
+            .update({
+              queue: this.queue
+            });
+        }
+      });
+  },
+  data: () => ({
+    queue: [],
+    order: 0,
+    ticketsCount: 0,
+    currentServing: 0,
+    business_name: "Bank Al Ahly"
+  })
+};
 </script>
 
 <style lang="scss">

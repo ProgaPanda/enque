@@ -147,7 +147,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .brightText {
   color: #aeaeae;
 }
@@ -166,6 +166,6 @@ export default {
   overflow-y: scroll;
 }
 .backgrounds {
-  background-color: #f3f3f3;
+  background-color: #f3f3f3 !important;
 }
 </style>
