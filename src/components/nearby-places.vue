@@ -2,6 +2,14 @@
   <div>
     <v-list style="background-color:#f3f3f3;">
       <v-container fluid style="height: 60vh; overflow-y: scroll">
+        <loading
+          :active.sync="isLoading"
+          style="top:50%; height:200px"
+          color="#0881ff"
+          background-color="rgba(0,0,0,0)"
+          :is-full-page="false"
+        ></loading>
+
         <v-list-item v-for="place in nearby" :key="place.name">
           <a
             :href="`google.navigation:q=${place.geometry.location.lat()},${place.geometry.location.lng()}`"
@@ -26,12 +34,21 @@
   </div>
 </template>
 <script>
+//import loading components
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+import "vue-loaders/dist/vue-loaders.css";
 export default {
+  components: {
+    Loading
+  },
   mounted() {
     this.findNearby();
   },
   methods: {
     async findNearby() {
+      this.isLoading = true;
+
       const crds = await this.getLocation();
       const fetchPlaces = (businessType, distance = "2000") =>
         new Promise((res, rej) => {
@@ -53,7 +70,7 @@ export default {
         fetchPlaces("restaurant")
       ]);
       this.nearby = [...new Set(places.flat())];
-      console.log(this.nearby);
+      this.isLoading = false;
     },
     getLocation() {
       let options = {
@@ -79,6 +96,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       nearby: []
     };
   }
