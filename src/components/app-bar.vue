@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container pa-0>
     <v-app-bar dark app flat color="#313538" class="pl-2 py-2">
       <span class="title">Bank Al Ahly</span>
       <v-spacer></v-spacer>
