@@ -11,9 +11,9 @@ import nearbyPlaces from "@/components/nearby-places.vue";
 import appBar from "../components/app-bar";
 import queueComponent from "../components/queue-component";
 export default {
-  name: "Que",
+  name: "Queue",
   components: {
-    "nearby-places": nearbyPlaces,
+    nearbyPlaces,
     appBar,
     queueComponent
   }
