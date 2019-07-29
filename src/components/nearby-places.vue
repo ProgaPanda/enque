@@ -1,10 +1,17 @@
   <template>
   <div>
     <v-list style="background-color:#f3f3f3;">
+      <v-layout justify-center>
+        <h4
+          class="text-uppercase text-xs-center brightText"
+          style="letter-spacing:7px"
+        >nearby places</h4>
+      </v-layout>
+
       <v-container fluid style="height: 60vh; overflow-y: scroll">
         <loading
           :active.sync="isLoading"
-          style="top:50%; height:200px"
+          class="loader"
           color="#0881ff"
           background-color="rgba(0,0,0,0)"
           :is-full-page="false"
@@ -17,14 +24,14 @@
             <v-card style="background-color:#f3f3f3;" flat width="90vw" class="mx-auto my-auto">
               <v-card-actions>
                 <v-layout>
-                  <v-avatar color="indigo" style="margin-right:15px;">
+                  <v-avatar :color="colorIcon(place.types[0])" class="avatarMargin">
                     <v-icon color="white">{{typeIcon(place.types[0])}}</v-icon>
                   </v-avatar>
                   <v-flex>
                     <h3>{{place.name}}</h3>
                     <v-layout justify-start>
                       <v-icon small left color="#aeaeae">location_on</v-icon>
-                      <div style="color:#757575;padding:0 auto;">2 minutes away.</div>
+                      <div class="brightText">2 minutes away.</div>
                     </v-layout>
                   </v-flex>
                   <v-spacer></v-spacer>
@@ -62,6 +69,18 @@ export default {
           return "restaurant";
         default:
           return "place";
+      }
+    },
+    colorIcon(businessType) {
+      switch (businessType) {
+        case "cafe":
+          return "indigo";
+        case "supermarket":
+          return "blue";
+        case "restaurant":
+          return "red";
+        default:
+          return "green";
       }
     },
     async findNearby() {
@@ -121,3 +140,16 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.brightText {
+  color: #aeaeae;
+}
+.avatarMargin {
+  margin-right: 15px;
+}
+.loader {
+  top: 50%;
+  height: 200px;
+}
+</style>
