@@ -3,10 +3,13 @@
     <v-list>
       <v-list-item v-for="location in nearby" :key="location.name">
         <v-card flat width="100vw" class="mx-auto my-auto">
-          <v-card-title>
-            <v-icon left>location_on</v-icon>
-            {{location.name}}
-          </v-card-title>
+          <v-card-title>{{location.name}}</v-card-title>
+          <v-card-text>
+            <p>
+              <v-icon small left>location_on</v-icon>2 minutes away.
+              <v-icon right>open_in_new</v-icon>
+            </p>
+          </v-card-text>
         </v-card>
       </v-list-item>
     </v-list>
