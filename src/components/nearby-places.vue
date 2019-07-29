@@ -1,9 +1,10 @@
   <template>
   <div>
-    <v-list>
-      <v-container fluid>
+    <v-list style="background-color:#f3f3f3;">
+      <v-container fluid style="height: 60vh; overflow-y: scroll">
         <v-list-item v-for="place in nearby" :key="place.name">
           <v-card
+            style="background-color:#f3f3f3;"
             :to="`google.navigation:q=${place.geometry.location.lat},${place.geometry.location.lng}`"
             flat
             width="100vw"
