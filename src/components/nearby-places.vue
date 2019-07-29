@@ -3,24 +3,23 @@
     <v-list style="background-color:#f3f3f3;">
       <v-container fluid style="height: 60vh; overflow-y: scroll">
         <v-list-item v-for="place in nearby" :key="place.name">
-          <v-card
-            style="background-color:#f3f3f3;"
-            :to="`google.navigation:q=${place.geometry.location.lat},${place.geometry.location.lng}`"
-            flat
-            width="100vw"
-            class="mx-auto my-auto"
+          <a
+            :href="`google.navigation:q=${place.geometry.location.lat},${place.geometry.location.lng}`"
+            style="text-decoration:none;"
           >
-            <h3>{{place.name}}</h3>
-            <v-card-actions style="padding-left:0">
-              <v-layout>
-                <v-icon small left color="#aeaeae">location_on</v-icon>
-                <div style="color:#757575;padding:0 auto;">2 minutes away.</div>
-                <v-spacer></v-spacer>
-                <v-icon right color="blue">open_in_new</v-icon>
-              </v-layout>
-            </v-card-actions>
-            <br />
-          </v-card>
+            <v-card style="background-color:#f3f3f3;" flat width="90vw" class="mx-auto my-auto">
+              <h3>{{place.name}}</h3>
+              <v-card-actions style="padding-left:0">
+                <v-layout>
+                  <v-icon small left color="#aeaeae">location_on</v-icon>
+                  <div style="color:#757575;padding:0 auto;">2 minutes away.</div>
+                  <v-spacer></v-spacer>
+                  <v-icon right color="blue">open_in_new</v-icon>
+                </v-layout>
+              </v-card-actions>
+              <br />
+            </v-card>
+          </a>
         </v-list-item>
       </v-container>
     </v-list>
