@@ -36,6 +36,7 @@ export default {};
 
 <style lang="scss">
 .queue-container {
+  max-height: 40vh;
   position: relative;
   background-color: #313538;
   color: #fff;
