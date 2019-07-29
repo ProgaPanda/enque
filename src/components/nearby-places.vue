@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { Promise } from "q";
 export default {
   mounted() {
     this.findNearby();
@@ -31,7 +30,7 @@ export default {
       const places = await Promise.all([cafes, restaurants]);
       const jsons = await Promise.all(places.map(res => res.json()));
       this.nearby = jsons.reduce((acc, curr) => {
-        return acc.concat(curr.results);
+        return acc.concat(curr.results.slice(0, 5));
       }, []);
     },
     getLocation() {
