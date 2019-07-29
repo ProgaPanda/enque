@@ -1,11 +1,11 @@
   <template>
   <div>
-    <v-btn text @click="getLocation">Click</v-btn>
-    <v-list v-for="location in nearby" :key="location">
+    <v-btn text @click="findNearby">Click</v-btn>
+    <v-list v-for="location in nearby" :key="location.name">
       <v-list-item>
         <v-card flat width="100vw" class="mx-auto my-auto">
           <v-card-title>
-            <v-icon>email</v-icon>
+            <v-icon left>location_on</v-icon>
             {{location.name}}
           </v-card-title>
         </v-card>
@@ -17,22 +17,45 @@
 <script>
 export default {
   methods: {
+    findNearby: async function() {
+      const crds = await this.getLocation();
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${crds.latitude},${crds.longitude}&type=cafe&rankby=distance&key=AIzaSyDJR5zil2pek3mXn-QR5AQpPxPPVG9XBmQ`
+      );
+      const json = await res.json();
+      this.nearby = json.results;
+    },
     getLocation: function() {
-      fetch(
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=30.004011,31.3996752&type=cafe&rankby=distance&key=AIzaSyDJR5zil2pek3mXn-QR5AQpPxPPVG9XBmQ"
-      )
-        .then(res => res.json())
-        .then(res => (this.nearby = res.results))
-        .catch(err => console.error(err));
+      let options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
+      function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+      }
+      return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            var crd = pos.coords;
+            res(crd);
+          },
+          error,
+          options
+        );
+      });
     }
   },
-  data: () => ({
-    nearby: [
-      {
-        title: "",
-        time: ""
-      }
-    ]
-  })
+  data() {
+    return {
+      nearby: [
+        {
+          title: "",
+          time: ""
+        }
+      ]
+    };
+  }
 };
 </script>
