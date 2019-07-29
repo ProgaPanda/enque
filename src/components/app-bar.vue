@@ -1,11 +1,12 @@
 <template>
   <v-container>
-    <v-app-bar app flat color="#313538" class="pl-2 py-2">
+    <v-app-bar dark app flat color="#313538" class="pl-2 py-2">
+      <span class="title">Bank Al Ahly</span>
       <v-spacer></v-spacer>
       <v-menu transition="slide-y-transition" light bottom left offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
-            <v-icon>home</v-icon>
+            <v-icon>more_vert</v-icon>
           </v-btn>
         </template>
 
