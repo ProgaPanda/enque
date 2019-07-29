@@ -1,14 +1,10 @@
   <template>
   <div>
-    <v-list style="background-color:#f3f3f3;">
+    <v-list class="backgrounds">
       <v-layout justify-center>
-        <h4
-          class="text-uppercase text-xs-center brightText"
-          style="letter-spacing:7px"
-        >nearby places</h4>
+        <h4 class="text-uppercase text-xs-center brightText nearby">nearby places</h4>
       </v-layout>
-
-      <v-container fluid style="height: 60vh; overflow-y: scroll">
+      <v-container fluid class="overflowScroller">
         <loading
           :active.sync="isLoading"
           class="loader"
@@ -21,7 +17,7 @@
             :href="`google.navigation:q=${place.geometry.location.lat()},${place.geometry.location.lng()}`"
             style="text-decoration:none;"
           >
-            <v-card style="background-color:#f3f3f3;" flat width="90vw" class="mx-auto my-auto">
+            <v-card flat width="90vw" class="mx-auto my-auto backgrounds">
               <v-card-actions>
                 <v-layout>
                   <v-avatar :color="colorIcon(place.types[0])" class="avatarMargin">
@@ -111,14 +107,15 @@ export default {
       this.isLoading = false;
 
       const distinctBy = (arr, extractorFn) => {
-          const result = [];
-          for (let i = 0; i < arr.length; i++) {
-              const found = result.find(item => extractorFn(item)=== extractorFn(arr[i]));
-              if (!found)
-                  result.push(arr[i])
-          }
-          return result;
-        };
+        const result = [];
+        for (let i = 0; i < arr.length; i++) {
+          const found = result.find(
+            item => extractorFn(item) === extractorFn(arr[i])
+          );
+          if (!found) result.push(arr[i]);
+        }
+        return result;
+      };
 
       this.nearby = distinctBy(places.flat(), i => i.name);
     },
@@ -133,7 +130,11 @@ export default {
         console.warn(`ERROR(${err.code}): ${err.message}`);
       }
       return new Promise((res, rej) => {
-        navigator.geolocation.getCurrentPosition(pos => res(pos.coords), error, options);
+        navigator.geolocation.getCurrentPosition(
+          pos => res(pos.coords),
+          error,
+          options
+        );
       });
     }
   },
@@ -156,5 +157,15 @@ export default {
 .loader {
   top: 50%;
   height: 200px;
+}
+.nearby {
+  letter-spacing: 7px;
+}
+.overflowScroller {
+  height: 60vh;
+  overflow-y: scroll;
+}
+.backgrounds {
+  background-color: #f3f3f3;
 }
 </style>
