@@ -8721,6 +8721,16 @@ vue-loader@^15.7.0:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-loaders@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/vue-loaders/-/vue-loaders-3.0.2.tgz#1855b39a3eae788b7c764a526e00dda70567971c"
+  integrity sha512-EAucm4iCElrz2tX7taZVHI67/VIc2hd/VpAryK7khQDg1UdsOz33p52iG761gwcs5IjsThrxsu1+XxgxTQxCtQ==
+
+vue-loading-overlay@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/vue-loading-overlay/-/vue-loading-overlay-3.2.0.tgz#7896f195e26a8d915219139a096367c9ad2c3c61"
+  integrity sha512-QBHa+vwcQ3k3oKp4pucP7RHWHSQvgVWFlDFqSaXLu+kCuEv1PZCoerAo1T04enF5y9yMFCqh7L9ChrWHy7HYvA==
+
 vue-qrcode-reader@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-2.0.2.tgz#786387dd7c1399c1aafbf55dde31646bbe38abfc"
