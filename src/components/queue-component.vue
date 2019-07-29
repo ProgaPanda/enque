@@ -11,17 +11,17 @@
         <v-layout class="justify-center">
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>
-            <span class="overline mt-1">people ahead</span>
+            <span class="overline my-2">people ahead</span>
             <span class="headline font-weight-medium green--text">4</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">bookmark</v-icon>
-            <span class="overline mt-1">Your ticket</span>
+            <span class="overline my-2">Your ticket</span>
             <span class="headline font-weight-medium">W73</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>
-            <span class="overline mt-1">Est. time left</span>
+            <span class="overline my-2">Est. time left</span>
             <span class="headline font-weight-medium red--text">12 min</span>
           </v-layout>
         </v-layout>
