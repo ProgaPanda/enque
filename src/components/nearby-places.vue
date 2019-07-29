@@ -66,14 +66,7 @@ export default {
         console.warn(`ERROR(${err.code}): ${err.message}`);
       }
       return new Promise((res, rej) => {
-        navigator.geolocation.getCurrentPosition(
-          pos => {
-            var crd = pos.coords;
-            res(crd);
-          },
-          error,
-          options
-        );
+        navigator.geolocation.getCurrentPosition(pos => res(pos.coords), error, options);
       });
     }
   },
