@@ -52,8 +52,18 @@ export default {
         fetchPlaces("cafe"),
         fetchPlaces("restaurant")
       ]);
-      this.nearby = [...new Set(places.flat())];
-      console.log(this.nearby);
+
+      const distinctBy = (arr, extractorFn) => {
+          const result = [];
+          for (let i = 0; i < arr.length; i++) {
+              const found = result.find(item => extractorFn(item)=== extractorFn(arr[i]));
+              if (!found)
+                  result.push(arr[i])
+          }
+          return result;
+        };
+
+      this.nearby = distinctBy(places.flat(), i => i.name);
     },
     getLocation() {
       let options = {
