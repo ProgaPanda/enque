@@ -41,8 +41,8 @@ export default {};
   background-color: #313538;
   color: #fff;
   &::after {
-    background: linear-gradient(-45deg, #fafafa 16px, transparent 0),
-      linear-gradient(45deg, #fafafa 16px, transparent 0);
+    background: linear-gradient(-45deg, #f3f3f3 16px, transparent 0),
+      linear-gradient(45deg, #f3f3f3 16px, transparent 0);
     background-position: left-bottom;
     background-repeat: repeat-x;
     background-size: 32px 32px;
