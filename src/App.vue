@@ -13,3 +13,10 @@ export default {
   data: () => ({})
 };
 </script>
+
+<style lang="scss">
+* {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+}
+</style>
