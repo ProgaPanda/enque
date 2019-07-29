@@ -2,17 +2,31 @@
   <div>
     <v-list style="background-color:#f3f3f3;">
       <v-container fluid style="height: 60vh; overflow-y: scroll">
-        <v-list-item v-for="place in nearby" :key="place.name">
+        <loading
+          :active.sync="isLoading"
+          style="top:50%; height:200px"
+          color="#0881ff"
+          background-color="rgba(0,0,0,0)"
+          :is-full-page="false"
+        ></loading>
+        <v-list-item v-for="place in nearby" :key="place.name" class="pa-1">
           <a
             :href="`google.navigation:q=${place.geometry.location.lat()},${place.geometry.location.lng()}`"
             style="text-decoration:none;"
           >
             <v-card style="background-color:#f3f3f3;" flat width="90vw" class="mx-auto my-auto">
-              <h3>{{place.name}}</h3>
-              <v-card-actions style="padding-left:0">
+              <v-card-actions>
                 <v-layout>
-                  <v-icon small left color="#aeaeae">location_on</v-icon>
-                  <div style="color:#757575;padding:0 auto;">2 minutes away.</div>
+                  <v-avatar color="indigo" style="margin-right:15px;">
+                    <v-icon color="white">{{typeIcon(place.types[0])}}</v-icon>
+                  </v-avatar>
+                  <v-flex>
+                    <h3>{{place.name}}</h3>
+                    <v-layout justify-start>
+                      <v-icon small left color="#aeaeae">location_on</v-icon>
+                      <div style="color:#757575;padding:0 auto;">2 minutes away.</div>
+                    </v-layout>
+                  </v-flex>
                   <v-spacer></v-spacer>
                   <v-icon right color="blue">open_in_new</v-icon>
                 </v-layout>
@@ -26,12 +40,33 @@
   </div>
 </template>
 <script>
+//import loading components
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
+import "vue-loaders/dist/vue-loaders.css";
 export default {
+  components: {
+    Loading
+  },
   mounted() {
     this.findNearby();
   },
   methods: {
+    typeIcon(businessType) {
+      switch (businessType) {
+        case "cafe":
+          return "local_cafe";
+        case "supermarket":
+          return "store_mall_directory";
+        case "restaurant":
+          return "restaurant";
+        default:
+          return "place";
+      }
+    },
     async findNearby() {
+      this.isLoading = true;
+
       const crds = await this.getLocation();
       const fetchPlaces = (businessType, distance = "2000") =>
         new Promise((res, rej) => {
@@ -50,8 +85,11 @@ export default {
         });
       const places = await Promise.all([
         fetchPlaces("cafe"),
-        fetchPlaces("restaurant")
+        fetchPlaces("restaurant"),
+        fetchPlaces("supermarket")
       ]);
+      this.nearby = [...new Set(places.flat())];
+      this.isLoading = false;
 
       const distinctBy = (arr, extractorFn) => {
           const result = [];
@@ -82,6 +120,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       nearby: []
     };
   }
