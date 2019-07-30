@@ -35,6 +35,7 @@
 <script>
 import { db } from "@/main";
 import firebase from "firebase/app";
+import router from "@/router";
 
 export default {
   mounted: function() {
@@ -47,6 +48,9 @@ export default {
         this.queue.forEach(entry => {
           if (entry.id === id) {
             this.order = entry.order;
+          }
+          if (this.currentServing == this.order) {
+            router.replace("/thanks");
           }
         });
       });
