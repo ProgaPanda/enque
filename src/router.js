@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Queue from './views/Queue';
-import QrScanner from "./views/QrScanner";
+import QrScanner from './views/QrScanner';
 Vue.use(Router);
 
 export default new Router({
@@ -9,14 +9,14 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'home',
+      name: 'queue',
+      path: '/queue',
       component: Queue,
     },
     {
-      path: '/scanner',
       name: 'scanner',
-      component: QrScanner
-    }
+      path: '/',
+      component: QrScanner,
+    },
   ],
 });

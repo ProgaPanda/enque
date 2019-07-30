@@ -12,7 +12,7 @@
           background-color="rgba(0,0,0,0)"
           :is-full-page="false"
         ></loading>
-        <v-list-item v-for="place in nearby" :key="place.name" class="pa-1">
+        <v-list-item v-for="(place, index) in nearby" :key="place.name" class="pa-1">
           <a
             :href="`google.navigation:q=${place.geometry.location.lat()},${place.geometry.location.lng()}`"
             style="text-decoration:none;"
@@ -26,8 +26,10 @@
                   <v-flex>
                     <h3>{{place.name}}</h3>
                     <v-layout justify-start>
-                      <v-icon small left color="#aeaeae">location_on</v-icon>
-                      <div class="brightText">2 minutes away.</div>
+                      <v-icon small left color="#aeaeae" v-if="distances.length">{{distances[index].icon}}</v-icon>
+                      <v-icon small left color="#aeaeae" v-else>location_on</v-icon>
+                      <div v-if="distances.length" class="brightText">{{distances[index].text}} away.</div>
+                      <div v-else class="brightText">0 min away.</div>
                     </v-layout>
                   </v-flex>
                   <v-spacer></v-spacer>
@@ -83,6 +85,8 @@ export default {
       this.isLoading = true;
 
       const crds = await this.getLocation();
+      this.coords.lng = crds.longitude;
+      this.coords.lat = crds.latitude;
       const fetchPlaces = (businessType, distance = "2000") =>
         new Promise((res, rej) => {
           const service = new google.maps.places.PlacesService(
@@ -117,7 +121,25 @@ export default {
         return result;
       };
 
-      this.nearby = distinctBy(places.flat(), i => i.name);
+      this.nearby = distinctBy(places.flat(), i => i.name).slice(0, 10);
+
+      const destinations = this.nearby.map(e => new google.maps.LatLng(e.geometry.location.lat(), e.geometry.location.lng()));
+      const currentLocation = new google.maps.LatLng(this.coords.lat, this.coords.lng);
+      const [walkingDistMat, drivingDistMat] = (await Promise.all([
+          this.computeDistanceInTime([currentLocation], destinations),
+          this.computeDistanceInTime([currentLocation], destinations, "DRIVING")
+      ])).map(distMat => distMat.rows[0].elements);
+
+      const distances = [];
+
+      for (let i = 0; i < walkingDistMat.length; i++) {
+          if (walkingDistMat[i].duration.value > 60 * 20) {
+              distances.push({text: drivingDistMat[i].duration.text, icon: "drive_eta"})
+          } else {
+              distances.push({text: walkingDistMat[i].duration.text, icon: "directions_walk"})
+          }
+      }
+      this.distances = distances;
     },
     getLocation() {
       let options = {
@@ -136,18 +158,36 @@ export default {
           options
         );
       });
+    },
+    computeDistanceInTime(origins, destinations, travelMode = "WALKING") {
+        return new Promise((res, rej) => {
+          const service = new google.maps.DistanceMatrixService;
+          service.getDistanceMatrix({
+            origins, destinations, travelMode,
+            unitSystem: google.maps.UnitSystem.METRIC,
+          }, (response, status) => {
+              if (status !== 'OK') {
+                  rej(status)
+              } else {
+              res(response)
+              }
+          }
+        );
+      })
     }
   },
   data() {
     return {
       isLoading: false,
-      nearby: []
+      nearby: [],
+      coords: {},
+      distances: [],
     };
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .brightText {
   color: #aeaeae;
 }
@@ -166,6 +206,6 @@ export default {
   overflow-y: scroll;
 }
 .backgrounds {
-  background-color: #f3f3f3;
+  background-color: #f3f3f3 !important;
 }
 </style>
