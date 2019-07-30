@@ -53,7 +53,7 @@ export default {
           if (entry.id === id) {
             this.order = entry.order;
           }
-          if (this.currentServing === this.order) {
+          if (this.currentServing > this.order) {
             router.push("/thanks");
           }
         });
