@@ -75,7 +75,8 @@ export default {
         if (!exists) {
           const new_queue_entry = {
             id,
-            order: this.queue.length
+            order: this.queue.length,
+            notificationToken: localStorage.getItem("notificationToken"),
           };
           this.queue.push(new_queue_entry);
           db.collection("queues")
