@@ -49,14 +49,14 @@ export default {
       .onSnapshot(querySnapshot => {
         this.currentServing = querySnapshot.docs[0].data().currentServing;
         this.queue = querySnapshot.docs[0].data().queue;
-        this.queue.forEach(entry => {
-          if (entry.id === id) {
-            this.order = entry.order;
-          }
-          if (this.currentServing > this.order) {
-            router.push("/thanks");
-          }
-        });
+        const entry = this.queue.find(entry => entry.id === id);
+        if (entry) {
+          this.order = entry.order;
+        }
+
+        if (this.order && this.currentServing >= this.order) {
+          router.push("/thanks");
+        }
       });
 
     db.collection("queues")
