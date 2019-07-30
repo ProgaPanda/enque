@@ -5,7 +5,9 @@
         Thank you for waiting
         <v-icon dark>insert_emoticon</v-icon>
       </h2>
-      <v-btn color="success" to="/">SCAN A NEW CODE</v-btn>
+      <a style="text-decoration:none" href="https://enqueapp.web.app">
+        <v-btn color="success">SCAN A NEW CODE</v-btn>
+      </a>
     </v-layout>
   </v-container>
 </template>
