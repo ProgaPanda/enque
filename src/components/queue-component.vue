@@ -4,7 +4,7 @@
       <p class="font-weight-light text-uppercase serving-text">now serving</p>
     </v-layout>
     <v-layout class="justify-center">
-      <h3 class="font-weight-medium display-3 serving-number">{{currentServing}}</h3>
+      <h3 class="font-weight-medium display-3 serving-number">C{{currentServing}}</h3>
     </v-layout>
     <v-layout class="justify-center" my-5>
       <v-flex xs11>
@@ -17,7 +17,7 @@
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">bookmark</v-icon>
             <span class="overline my-2">Your ticket</span>
-            <span class="headline font-weight-medium">{{order}}</span>
+            <span class="headline font-weight-medium">C{{order}}</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>

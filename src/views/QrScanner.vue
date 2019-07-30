@@ -24,7 +24,7 @@ export default {
   methods: {
     onDecode(result) {
       console.log(window.location.href, result);
-      router.push({ path: "/", query: { queueId: result } });
+      router.push({ path: "/queue", query: { queueId: result } });
     },
 
     async onInit(promise) {
