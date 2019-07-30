@@ -26,8 +26,9 @@
                   <v-flex>
                     <h3>{{place.name}}</h3>
                     <v-layout justify-start>
-                      <v-icon small left color="#aeaeae">location_on</v-icon>
-                      <div v-if="distances.length" class="brightText">{{distances[index]}} away.</div>
+                      <v-icon small left color="#aeaeae" v-if="distances.length">{{distances[index].icon}}</v-icon>
+                      <v-icon small left color="#aeaeae" v-else>location_on</v-icon>
+                      <div v-if="distances.length" class="brightText">{{distances[index].text}} away.</div>
                       <div v-else class="brightText">0 min away.</div>
                     </v-layout>
                   </v-flex>
@@ -124,8 +125,21 @@ export default {
 
       const destinations = this.nearby.map(e => new google.maps.LatLng(e.geometry.location.lat(), e.geometry.location.lng()));
       const currentLocation = new google.maps.LatLng(this.coords.lat, this.coords.lng);
-      const distMat = await this.computeDistanceInTime([currentLocation], destinations);
-      this.distances = distMat.rows[0].elements.map(elm => elm.duration.text);
+      const [walkingDistMat, drivingDistMat] = (await Promise.all([
+          this.computeDistanceInTime([currentLocation], destinations),
+          this.computeDistanceInTime([currentLocation], destinations, "DRIVING")
+      ])).map(distMat => distMat.rows[0].elements);
+
+      const distances = [];
+
+      for (let i = 0; i < walkingDistMat.length; i++) {
+          if (walkingDistMat[i].duration.value > 60 * 20) {
+              distances.push({text: drivingDistMat[i].duration.text, icon: "drive_eta"})
+          } else {
+              distances.push({text: walkingDistMat[i].duration.text, icon: "directions_walk"})
+          }
+      }
+      this.distances = distances;
     },
     getLocation() {
       let options = {
@@ -145,12 +159,11 @@ export default {
         );
       });
     },
-    computeDistanceInTime(origins, destinations) {
+    computeDistanceInTime(origins, destinations, travelMode = "WALKING") {
         return new Promise((res, rej) => {
           const service = new google.maps.DistanceMatrixService;
           service.getDistanceMatrix({
-            origins, destinations,
-            travelMode: 'WALKING',
+            origins, destinations, travelMode,
             unitSystem: google.maps.UnitSystem.METRIC,
           }, (response, status) => {
               if (status !== 'OK') {
