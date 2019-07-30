@@ -12,7 +12,9 @@
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>
             <span class="overline my-2">people ahead</span>
-            <span class="headline font-weight-medium green--text">{{order - currentServing}}</span>
+            <span
+              class="headline font-weight-medium green--text"
+            >{{Math.max(0,order - currentServing)}}</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">bookmark</v-icon>
