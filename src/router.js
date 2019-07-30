@@ -10,12 +10,12 @@ export default new Router({
   routes: [
     {
       name: 'queue',
-      path: '/',
+      path: '/queue',
       component: Queue,
     },
     {
       name: 'scanner',
-      path: '/scanner',
+      path: '/',
       component: QrScanner,
     },
   ],
