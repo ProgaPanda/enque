@@ -41,8 +41,8 @@ export default {
   mounted: function() {
     let id = this.$route.query.queueId;
     if (!id) {
-        router.push("/");
-        return;
+      router.push("/");
+      return;
     }
     db.collection("queues")
       .where("name", "==", this.business_name)
@@ -53,8 +53,8 @@ export default {
           if (entry.id === id) {
             this.order = entry.order;
           }
-          if (this.currentServing == this.order) {
-            router.replace("/thanks");
+          if (this.currentServing === this.order) {
+            router.push("/thanks");
           }
         });
       });
@@ -76,7 +76,7 @@ export default {
           const new_queue_entry = {
             id,
             order: this.queue.length,
-            notificationToken: localStorage.getItem("notificationToken"),
+            notificationToken: localStorage.getItem("notificationToken")
           };
           this.queue.push(new_queue_entry);
           db.collection("queues")
