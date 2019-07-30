@@ -40,6 +40,10 @@ import router from "@/router";
 export default {
   mounted: function() {
     let id = this.$route.query.queueId;
+    if (!id) {
+        router.push("/");
+        return;
+    }
     db.collection("queues")
       .where("name", "==", this.business_name)
       .onSnapshot(querySnapshot => {
@@ -102,7 +106,6 @@ export default {
   &::after {
     background: linear-gradient(-45deg, #f3f3f3 16px, transparent 0),
       linear-gradient(45deg, #f3f3f3 16px, transparent 0);
-    background-position: left-bottom;
     background-repeat: repeat-x;
     background-size: 32px 32px;
     content: " ";
