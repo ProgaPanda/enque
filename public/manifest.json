@@ -1,6 +1,6 @@
 {
-  "name": "enque-app",
-  "short_name": "enque-app",
+  "name": "Enque",
+  "short_name": "Enque",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
