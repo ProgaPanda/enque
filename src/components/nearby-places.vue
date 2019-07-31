@@ -121,7 +121,9 @@ export default {
         return result;
       };
 
-      this.nearby = distinctBy(places.flat(), i => i.name).slice(0, 10);
+      this.nearby = distinctBy(places.flat(), i => i.name)
+          .sort((a, b) => Math.random() - 0.5)
+          .slice(0, 10);
 
       const destinations = this.nearby.map(e => new google.maps.LatLng(e.geometry.location.lat(), e.geometry.location.lng()));
       const currentLocation = new google.maps.LatLng(this.coords.lat, this.coords.lng);
