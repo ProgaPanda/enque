@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import { db } from "@/main";
-import firebase from "firebase/app";
+import { db, messaging } from "@/main";
 import router from "@/router";
 
 export default {
@@ -87,6 +86,8 @@ export default {
             });
         }
       });
+
+    this.requestNotificationPermission()
   },
   data: () => ({
     queue: [],
@@ -94,7 +95,18 @@ export default {
     ticketsCount: 0,
     currentServing: 0,
     business_name: "Bank Al Ahly"
-  })
+  }),
+  methods: {
+    async requestNotificationPermission() {
+      try {
+        await messaging.requestPermission()
+        const token = await messaging.getToken();
+        localStorage.setItem("notificationToken", token);
+      } catch (err) {
+        console.log('Unable to get permission to notify.', err);
+      }
+    }
+  }
 };
 </script>
 
