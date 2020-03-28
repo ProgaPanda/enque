@@ -4,7 +4,7 @@
       <p class="font-weight-light text-uppercase serving-text">now serving</p>
     </v-layout>
     <v-layout class="justify-center">
-      <h3 class="font-weight-medium display-3 serving-number">C{{currentServing}}</h3>
+      <h3 class="font-weight-medium display-3 serving-number">C{{currentlyServing}}</h3>
     </v-layout>
     <v-layout class="justify-center" my-5>
       <v-flex xs11>
@@ -12,9 +12,7 @@
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">people</v-icon>
             <span class="overline my-2">people ahead</span>
-            <span
-              class="headline font-weight-medium green--text"
-            >{{Math.max(0,order - currentServing)}}</span>
+            <span class="headline font-weight-medium green--text">{{peopleAhead}}</span>
           </v-layout>
           <v-layout column class="align-center">
             <v-icon color="#b0b0b0">bookmark</v-icon>
@@ -37,65 +35,44 @@ import { db, messaging } from "@/main";
 import router from "@/router";
 
 export default {
-  mounted: function() {
-    let id = this.$route.query.queueId;
-    if (!id) {
-      router.push("/");
-      return;
+  async mounted() {
+    // Example ticket VEpWc1dReXViNjV0Z0RZVUdEWEstT3UxUlFsOWxlV2FCRkl6cHFaNDgtMQ
+    const ticket = this.$route.query.ticket;
+    if (!ticket) {
+      return router.push("/")
     }
-    db.collection("queues")
-      .where("name", "==", this.business_name)
+
+    const { name, ticketNum } = await this.enqueue(ticket);
+    this.business_name = name;
+    this.order = ticketNum;
+
+    db.collectionGroup('lines')
+      .where("id", "==", "Ou1RQl9leWaBFIzpqZ48")
       .onSnapshot(querySnapshot => {
-        this.currentServing = querySnapshot.docs[0].data().currentServing;
-        this.queue = querySnapshot.docs[0].data().queue;
-        const entry = this.queue.find(entry => entry.id === id);
-        if (entry) {
-          this.order = entry.order;
+        const data = querySnapshot.docs[0].data();
+        this.currentlyServing = data.currentlyServing;
+
+        if (this.currentlyServing === this.order) {
+          // TODO display a "please head up to the counter" message
         }
 
-        if (this.order && this.currentServing >= this.order) {
+        if (this.currentlyServing > this.order) {
           router.push("/thanks");
         }
-      });
-
-    db.collection("queues")
-      .where("name", "==", this.business_name)
-      .get()
-      .then(querySnapshot => {
-        let data = querySnapshot.docs[0].data();
-        let queue = data.queue;
-        let exists = false;
-        queue.forEach(entry => {
-          if (entry.id === id) {
-            exists = true;
-          }
-        });
-
-        if (!exists) {
-          const new_queue_entry = {
-            id,
-            order: this.queue.length,
-            notificationToken: localStorage.getItem("notificationToken")
-          };
-          this.queue.push(new_queue_entry);
-          db.collection("queues")
-            // TODO: dynamic id
-            .doc("zfG8pmQNxRROJbIeeSJJ")
-            .update({
-              queue: this.queue
-            });
-        }
-      });
+      })
 
     this.requestNotificationPermission()
   },
   data: () => ({
-    queue: [],
     order: 0,
-    ticketsCount: 0,
-    currentServing: 0,
+    currentlyServing: 0,
     business_name: "Bank Al Ahly"
   }),
+  computed: {
+    peopleAhead() {
+      return Math.max(0, this.order - this.currentlyServing)
+    }
+  },
   methods: {
     async requestNotificationPermission() {
       try {
@@ -105,6 +82,23 @@ export default {
       } catch (err) {
         console.log('Unable to get permission to notify.', err);
       }
+    },
+    async enqueue(ticketData) {
+      // const callable = firebase.functions().httpsCallable('enqueue');
+      // const notificationToken = localStorage.setItem("notificationToken");
+      // return await callable({ ticketData, notificationToken})
+
+      // TODO replace this with the callable code above
+      const [queueId, lineId, ticketNum] = atob(ticketData).split('-')
+      const notificationToken = localStorage.getItem("notificationToken");
+
+      const queueRef = db.doc(`/queues/${queueId}`);
+      const ticketsRef = queueRef.collection(`lines/${lineId}/tickets`);
+
+      await ticketsRef.add({ number: +ticketNum, notificationToken })
+
+      const { name, businessName } = (await queueRef.get()).data()
+      return { name, businessName, ticketNum }
     }
   }
 };
